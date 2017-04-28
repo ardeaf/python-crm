@@ -1,0 +1,46 @@
+contact id
+last name
+first name
+cell phone
+dob
+current address
+mailing address
+
+depdendents (contact id)
+name
+dob
+
+application (contact id)
+app date
+loan purpose
+loan type
+credit score
+fthb
+lock date
+lock expiration
+condo preapprovals = {mf: purch price, ... }
+sfr preapproval = {ins 150: x, ins 250: x}
+close date
+close purchase price
+close loan amount
+close property address
+close maintenance fee
+close insurance
+close other monthly fees
+close rate
+
+employers (application id)
+employer
+position
+monthly income
+
+assets (application id)
+liquid (boolean)
+amount
+
+rentals (application id)
+address
+revenue
+expense
+pitia
+
