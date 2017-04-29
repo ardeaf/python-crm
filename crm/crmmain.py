@@ -1,4 +1,5 @@
-from peewee import Model, CharField, DateField, BooleanField, IntegerField, SqliteDatabase, ForeignKeyField
+from peewee import Model, CharField, DateField, BooleanField, IntegerField, SqliteDatabase, ForeignKeyField, \
+    DecimalField
 import os
 
 if __name__ == "__main__":
@@ -32,23 +33,21 @@ class Dependent(BaseModel):
     Birthdate = DateField()
 
 
-"""class Application(BaseModel)
-app date
-loan purpose
-loan type
-credit score
-fthb
-preapproval date
-preapproval rate
-condo preapprovals = {mf: purch price, ... }
-sfr preapproval = {ins 150: x, ins 250: x}
-lock date
-lock expiration
-close date
-close purchase price
-close loan amount
-close property address
-close maintenance fee
-close insurance
-close other monthly fees
-close rate"""
+class Application(BaseModel):
+    Applicant = ForeignKeyField(Person, related_name='Applications')
+    ApplicationDate = DateField()
+    LoanPurpose = CharField()
+    LoanType = CharField()
+    CreditScore = CharField()
+    FTHB = BooleanField()
+    LockDate = DateField()
+    LockRate = DecimalField()
+    LockExpiration = DateField()
+    CloseDate = DateField()
+    ClosePurchasePrice = IntegerField()
+    CloseLoanAmount = IntegerField()
+    ClosePropertyAddress = CharField()
+    CloseMaintenanceFee = IntegerField()
+    CloseInsurance = IntegerField()
+    CloseOtherFees = IntegerField()
+    CloseRate = DecimalField()

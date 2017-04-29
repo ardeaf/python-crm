@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent
+from crm.crmmain import Person, Dependent, Application
 from datetime import date
 
 
@@ -31,9 +31,11 @@ def sample_dependent():
                      Birthdate=date(2005, 6, 1),
                      Parent=1)
 
+
 @pytest.fixture()
 def sample_application():
-    return Application(ApplicationDate=date(2005,1,1),
+    return Application(Applicant=1,
+                       ApplicationDate=date(2005, 1, 1),
                        LoanPurpose="Purchase",
                        LoanType="Conventional",
                        CreditScore="750",
@@ -50,6 +52,7 @@ def sample_application():
                        CloseOtherFees=250,
                        CloseRate=4.250)
 
+
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
     sample_person.save()
@@ -63,7 +66,8 @@ def test_dependent_parent_equals_person_from_query(sample_dependent, sample_pers
     db.create_table(Dependent, True)
     sample_dependent.save()
 
-    assert sample_dependent.Parent == Person.get(Person.id == 1) # id is 1 since we added only 1 person
+    assert sample_dependent.Parent == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
+
 
 def test_application_applicant_equals_person_from_query(sample_person, sample_application, db):
     db.create_table(Person, True)
@@ -72,4 +76,18 @@ def test_application_applicant_equals_person_from_query(sample_person, sample_ap
     db.create_table(Application, True)
     sample_application.save()
 
-    assert sample_application.Application == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
+    assert sample_application.Applicant == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
+
+
+def test_create_application_by_querying_name(sample_person, sample_application, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    first_name = Person.get(Person.FirstName == sample_person.FirstName).FirstName
+    last_name = Person.get(Person.LastName == sample_person.LastName).LastName
+
+    db.create_table(Application, True)
+    sample_application.Applicant == Person.get(Person.FirstName == first_name, Person.LastName == last_name)
+    sample_application.save()
+
+    assert sample_application.Applicant == Person.get(Person.id == 1)
