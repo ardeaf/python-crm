@@ -30,3 +30,25 @@ class Dependent(BaseModel):
     FirstName = CharField()
     LastName = CharField()
     Birthdate = DateField()
+
+
+"""class Application(BaseModel)
+app date
+loan purpose
+loan type
+credit score
+fthb
+preapproval date
+preapproval rate
+condo preapprovals = {mf: purch price, ... }
+sfr preapproval = {ins 150: x, ins 250: x}
+lock date
+lock expiration
+close date
+close purchase price
+close loan amount
+close property address
+close maintenance fee
+close insurance
+close other monthly fees
+close rate"""

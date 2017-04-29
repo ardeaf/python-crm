@@ -17,10 +17,6 @@ loan purpose
 loan type
 credit score
 fthb
-preapproval date
-preapproval rate
-condo preapprovals = {mf: purch price, ... }
-sfr preapproval = {ins 150: x, ins 250: x}
 lock date
 lock expiration
 close date
@@ -31,6 +27,13 @@ close maintenance fee
 close insurance
 close other monthly fees
 close rate
+
+preapproval (dependent id)
+maintenance fee
+ins (default 35, 150, depending on MF)
+date
+rate
+
 
 employer (application id)
 employer

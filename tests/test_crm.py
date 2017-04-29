@@ -31,6 +31,24 @@ def sample_dependent():
                      Birthdate=date(2005, 6, 1),
                      Parent=1)
 
+@pytest.fixture()
+def sample_application():
+    return Application(ApplicationDate=date(2005,1,1),
+                       LoanPurpose="Purchase",
+                       LoanType="Conventional",
+                       CreditScore="750",
+                       FTHB=True,
+                       LockDate=date(2005, 1, 1),
+                       LockRate=4.250,
+                       LockExpiration=date(2005, 2, 16),
+                       CloseDate=date(2005, 2, 16),
+                       ClosePurchasePrice=800000,
+                       CloseLoanAmount=600000,
+                       ClosePropertyAddress="800 Microsoft Rd. Suite 500, San Lorenzo, CA, 99122",
+                       CloseMaintenanceFee=452,
+                       CloseInsurance=140,
+                       CloseOtherFees=250,
+                       CloseRate=4.250)
 
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
@@ -46,3 +64,12 @@ def test_dependent_parent_equals_person_from_query(sample_dependent, sample_pers
     sample_dependent.save()
 
     assert sample_dependent.Parent == Person.get(Person.id == 1) # id is 1 since we added only 1 person
+
+def test_application_applicant_equals_person_from_query(sample_person, sample_application, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    db.create_table(Application, True)
+    sample_application.save()
+
+    assert sample_application.Application == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
