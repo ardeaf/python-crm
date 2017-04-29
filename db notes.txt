@@ -2,11 +2,12 @@ contact id
 last name
 first name
 cell phone
+email
 dob
 current address
 mailing address
 
-depdendents (contact id)
+dependents (contact id)
 name
 dob
 
@@ -16,10 +17,12 @@ loan purpose
 loan type
 credit score
 fthb
-lock date
-lock expiration
+preapproval date
+preapproval rate
 condo preapprovals = {mf: purch price, ... }
 sfr preapproval = {ins 150: x, ins 250: x}
+lock date
+lock expiration
 close date
 close purchase price
 close loan amount
@@ -29,18 +32,33 @@ close insurance
 close other monthly fees
 close rate
 
-employers (application id)
+employer (application id)
 employer
 position
 monthly income
 
-assets (application id)
+asset (application id)
 liquid (boolean)
 amount
 
-rentals (application id)
+rental (application id)
 address
 revenue
 expense
 pitia
+
+realtor id (contact id)
+name
+company
+phone number
+email
+
+referrals (contact id or realtor id)
+
+
+
+
+
+
+
 
