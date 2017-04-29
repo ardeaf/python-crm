@@ -7,7 +7,7 @@ from datetime import date
 
 @pytest.fixture(scope='session')
 def db():
-    database_path = os.path.join(*os.path.expanduser("~").split(os.sep), "test_crm.db")
+    database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
     database.drop_tables([Person, Dependent], True)
