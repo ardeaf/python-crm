@@ -1,2 +1,4 @@
 -r shared.txt
 pytest==3.0.7
+tox==2.7.0
+tox-travis==0.8
