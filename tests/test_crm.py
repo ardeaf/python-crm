@@ -39,18 +39,21 @@ def sample_application():
                        LoanPurpose="Purchase",
                        LoanType="Conventional",
                        CreditScore="750",
+                       Income=5500,
+                       Assets=150000,
                        FTHB=True,
+                       Locked=True,
                        LockDate=date(2005, 1, 1),
                        LockRate=4.250,
                        LockExpiration=date(2005, 2, 16),
+                       Closed=True,
                        CloseDate=date(2005, 2, 16),
-                       ClosePurchasePrice=800000,
-                       CloseLoanAmount=600000,
-                       ClosePropertyAddress="800 Microsoft Rd. Suite 500, San Lorenzo, CA, 99122",
-                       CloseMaintenanceFee=452,
-                       CloseInsurance=140,
-                       CloseOtherFees=250,
-                       CloseRate=4.250)
+                       PurchasePrice=800000,
+                       LoanAmount=600000,
+                       PropertyAddress="800 Microsoft Rd. Suite 500, San Lorenzo, CA, 99122",
+                       MaintenanceFee=452,
+                       Insurance=140,
+                       OtherFees=250)
 
 
 @pytest.fixture()
@@ -65,7 +68,8 @@ def sample_preapproval():
                        LoanAmount=300000,
                        CreditScore=650,
                        Income=5500,
-                       Assets=120000,
+                       ClosingCosts=5000,
+                       CashToClose=120000,
                        Reserves=30000,
                        DTI=45)
 
@@ -121,17 +125,3 @@ def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, 
     sample_preapproval.save()
 
     assert sample_preapproval.Person == Person.get(Person.id == 1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

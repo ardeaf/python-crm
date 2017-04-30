@@ -39,18 +39,21 @@ class Application(BaseModel):
     LoanPurpose = CharField()
     LoanType = CharField()
     CreditScore = CharField()
+    Income = IntegerField()
+    Assets = IntegerField()
     FTHB = BooleanField()
+    Locked = BooleanField
     LockDate = DateField()
     LockRate = DecimalField()
     LockExpiration = DateField()
+    Closed = BooleanField()
     CloseDate = DateField()
-    ClosePurchasePrice = IntegerField()
-    CloseLoanAmount = IntegerField()
-    ClosePropertyAddress = CharField()
-    CloseMaintenanceFee = IntegerField()
-    CloseInsurance = IntegerField()
-    CloseOtherFees = IntegerField()
-    CloseRate = DecimalField()
+    PurchasePrice = IntegerField()
+    LoanAmount = IntegerField()
+    PropertyAddress = CharField()
+    MaintenanceFee = IntegerField()
+    Insurance = IntegerField()
+    OtherFees = IntegerField()
 
 
 class Preapproval(BaseModel):
@@ -64,26 +67,7 @@ class Preapproval(BaseModel):
     LoanAmount = IntegerField()
     CreditScore = IntegerField()
     Income = IntegerField()
-    Assets = IntegerField()
+    ClosingCosts = IntegerField()
+    CashToClose = IntegerField()
     Reserves = IntegerField()
     DTI = DecimalField()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
