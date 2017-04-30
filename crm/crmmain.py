@@ -62,10 +62,11 @@ class Preapproval(BaseModel):
     Rate = DecimalField()
     PurchasePrice = IntegerField()
     LoanAmount = IntegerField()
+    CreditScore = IntegerField()
     IncomeUsed = IntegerField()
     AssetsUsed = IntegerField()
-    Reserves= IntegerField()
-    DTI=DecimalField()
+    Reserves = IntegerField()
+    DTI = DecimalField()
 
 
 

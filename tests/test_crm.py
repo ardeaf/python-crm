@@ -63,8 +63,9 @@ def sample_preapproval():
                        Rate=4.500,
                        PurchasePrice=400000,
                        LoanAmount=300000,
-                       IncomeUsed=5500,
-                       AssetsUsed=120000,
+                       CreditScore=650,
+                       Income=5500,
+                       Assets=120000,
                        Reserves=30000,
                        DTI=45)
 
