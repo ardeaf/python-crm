@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application
+from crm.crmmain import Person, Dependent, Application, Preapproval
 from datetime import date
 
 
@@ -10,7 +10,7 @@ def db():
     database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
-    database.drop_tables([Person, Dependent], True)
+    database.drop_tables([Person, Dependent, Application], True)
 
 
 @pytest.fixture()
@@ -35,7 +35,7 @@ def sample_dependent():
 @pytest.fixture()
 def sample_application():
     return Application(Applicant=1,
-                       ApplicationDate=date(2005, 1, 1),
+                       Date=date(2005, 1, 1),
                        LoanPurpose="Purchase",
                        LoanType="Conventional",
                        CreditScore="750",
@@ -52,6 +52,21 @@ def sample_application():
                        CloseOtherFees=250,
                        CloseRate=4.250)
 
+
+@pytest.fixture()
+def sample_preapproval():
+    return Preapproval(Person=1,                    #This is not an accurate preapproval at all.
+                       MaintenanceFee=600,
+                       Insurance=40,
+                       Taxes=100,
+                       Date=date(2005, 1, 1),
+                       Rate=4.500,
+                       PurchasePrice=400000,
+                       LoanAmount=300000,
+                       IncomeUsed=5500,
+                       AssetsUsed=120000,
+                       Reserves=30000,
+                       DTI=45)
 
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
@@ -91,3 +106,31 @@ def test_create_application_by_querying_name(sample_person, sample_application, 
     sample_application.save()
 
     assert sample_application.Applicant == Person.get(Person.id == 1)
+
+
+def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    first_name = Person.get(Person.FirstName == sample_person.FirstName).FirstName
+    last_name = Person.get(Person.LastName == sample_person.LastName).LastName
+
+    db.create_table(Preapproval, True)
+    sample_preapproval.Person == Person.get(Person.FirstName == first_name, Person.LastName == last_name)
+    sample_preapproval.save()
+
+    assert sample_preapproval.Person == Person.get(Person.id == 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

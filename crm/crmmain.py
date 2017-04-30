@@ -35,7 +35,7 @@ class Dependent(BaseModel):
 
 class Application(BaseModel):
     Applicant = ForeignKeyField(Person, related_name='Applications')
-    ApplicationDate = DateField()
+    Date = DateField()
     LoanPurpose = CharField()
     LoanType = CharField()
     CreditScore = CharField()
@@ -51,3 +51,38 @@ class Application(BaseModel):
     CloseInsurance = IntegerField()
     CloseOtherFees = IntegerField()
     CloseRate = DecimalField()
+
+
+class Preapproval(BaseModel):
+    Person = ForeignKeyField(Person, related_name="Preapprovals")
+    MaintenanceFee = IntegerField()
+    Insurance = IntegerField()
+    Taxes = IntegerField()
+    Date = DateField()
+    Rate = DecimalField()
+    PurchasePrice = IntegerField()
+    LoanAmount = IntegerField()
+    IncomeUsed = IntegerField()
+    AssetsUsed = IntegerField()
+    Reserves= IntegerField()
+    DTI=DecimalField()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
