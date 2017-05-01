@@ -1,4 +1,6 @@
 from crm.crmmain import Person, Dependent, Application, Preapproval, Job
+from datetime import date
+from copy import deepcopy
 from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job
 
 def test_query_matches_saved_person(sample_person, db):
@@ -31,11 +33,7 @@ def test_create_application_by_querying_name(sample_person, sample_application, 
     db.create_table(Person, True)
     sample_person.save()
 
-    first_name = Person.get(Person.first_name == sample_person.first_name).first_name
-    last_name = Person.get(Person.last_name == sample_person.last_name).last_name
-
     db.create_table(Application, True)
-    sample_application.person == Person.get(Person.first_name == first_name, Person.last_name == last_name)
     sample_application.save()
 
     assert sample_application.person == Person.get(Person.id == 1)
@@ -45,11 +43,9 @@ def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, 
     db.create_table(Person, True)
     sample_person.save()
 
-    first_name = Person.get(Person.first_name == sample_person.first_name).first_name
-    last_name = Person.get(Person.last_name == sample_person.last_name).last_name
-
     db.create_table(Preapproval, True)
-    sample_preapproval.person == Person.get(Person.first_name == first_name, Person.last_name == last_name)
+    sample_preapproval.person = Person.get(Person.first_name == sample_person.first_name,
+                                           Person.last_name == sample_person.last_name)
     sample_preapproval.save()
 
     assert sample_preapproval.person == Person.get(Person.id == 1)
@@ -59,15 +55,12 @@ def test_job_creation_by_querying_name(sample_person, sample_application, sample
     db.create_table(Person, True)
     sample_person.save()
 
-    first_name = Person.get(Person.first_name == sample_person.first_name).first_name
-    last_name = Person.get(Person.last_name == sample_person.last_name).last_name
-
     db.create_table(Application, True)
     sample_application.save()
 
     db.create_table(Job, True)
-    sample_job.Application = Person.get((Person.first_name == sample_person.first_name) &
-                                        (Person.last_name == sample_person.last_name)).applications
+    sample_job.application = Person.get(Person.first_name == sample_person.first_name,
+                                        Person.last_name == sample_person.last_name).applications
     sample_job.save()
 
     assert sample_job.person == Person.get(Person.id == 1)
