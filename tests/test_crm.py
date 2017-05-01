@@ -54,3 +54,16 @@ def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, 
 
     assert sample_preapproval.Person == Person.get(Person.id == 1)
 
+
+def test_employer_creation_by_querying_name(sample_person, sample_application, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    first_name = Person.get(Person.FirstName == sample_person.FirstName).FirstName
+    last_name = Person.get(Person.LastName == sample_person.LastName).LastName
+
+    db.create_table(Employer, True)
+    sample_employer.Person == Person.get(Person.FirstName == first_name, Person.LastName == last_name)
+    sample_employer.save()
+
+    assert sample_employer.Person == Person.get(Person.id == 1)

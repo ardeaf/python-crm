@@ -71,3 +71,10 @@ def sample_preapproval():
                        CashToClose=120000,
                        Reserves=30000,
                        DTI=45)
+
+@pytest.fixture(scope='module')
+def sample_employer():
+    return Employment(Person=1,
+                      Employer="Riot Games",
+                      Position="Developer",
+                      MonthlyIncome=5500)
