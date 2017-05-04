@@ -1,7 +1,5 @@
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job
-from datetime import date
-from copy import deepcopy
-from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset
+from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job, sample_asset
 
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
@@ -19,16 +17,6 @@ def test_dependent_parent_equals_person_from_query(sample_dependent, sample_pers
     assert sample_dependent.parent == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
 
 
-def test_application_applicant_equals_person_from_query(sample_person, sample_application, db):
-    db.create_table(Person, True)
-    sample_person.save()
-
-    db.create_table(Application, True)
-    sample_application.save()
-
-    assert sample_application.person == Person.get(Person.id == 1)  # id is 1 since we added only 1 person
-
-
 def test_create_application_by_querying_name(sample_person, sample_application, db):
     db.create_table(Person, True)
     sample_person.save()
@@ -36,7 +24,7 @@ def test_create_application_by_querying_name(sample_person, sample_application, 
     db.create_table(Application, True)
     sample_application.save()
 
-    assert sample_application.person == Person.get(Person.id == 1)
+    assert sample_application == Person.get(Person.id == 1).applications.get()
 
 
 def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, db):
@@ -48,10 +36,10 @@ def test_create_preapproval_by_querying_name(sample_person, sample_preapproval, 
                                            Person.last_name == sample_person.last_name)
     sample_preapproval.save()
 
-    assert sample_preapproval.person == Person.get(Person.id == 1)
+    assert sample_preapproval == Person.get(Person.id == 1).preapprovals.get()
 
 
-def test_job_creation_by_querying_name(sample_person, sample_application, sample_job, db):
+def test_job_creation_by_querying_name(sample_person, sample_job, sample_application, db):
     db.create_table(Person, True)
     sample_person.save()
 
@@ -59,8 +47,23 @@ def test_job_creation_by_querying_name(sample_person, sample_application, sample
     sample_application.save()
 
     db.create_table(Job, True)
-    sample_job.application = Person.get(Person.first_name == sample_person.first_name,
-                                        Person.last_name == sample_person.last_name).applications
+    sample_job.person = Person.get(Person.first_name == sample_person.first_name,
+                                   Person.last_name == sample_person.last_name)
     sample_job.save()
 
-    assert sample_job.person == Person.get(Person.id == 1)
+    assert sample_job == Person.get(Person.id == 1).jobs.get()
+
+
+def test_asset_creation_by_querying_name(sample_person, sample_application, sample_asset, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    db.create_table(Application, True)
+    sample_application.save()
+
+    db.create_table(Asset, True)
+    sample_asset.person = Person.get(Person.first_name == sample_person.first_name,
+                                     Person.last_name == sample_person.last_name)
+    sample_asset.save()
+
+    assert sample_asset == Person.get(Person.id == 1).assets.get()

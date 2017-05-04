@@ -1,18 +1,19 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset
 from datetime import date
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture()
 def db():
     database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
-    database.drop_tables([Person, Dependent, Application, Preapproval, Job], True)
+    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset], True)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def sample_person():
     return Person(last_name="Lothbrok",
                   first_name="Ardeaf",
@@ -23,7 +24,7 @@ def sample_person():
                   address_mailing="P.O. Box 3, San Mateo, CA, 98102")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def sample_dependent():
     return Dependent(last_name="Lothbrok",
                      first_name="Bjorn",
@@ -31,7 +32,7 @@ def sample_dependent():
                      parent=1)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def sample_application():
     return Application(person=1,
                        date=date(2005, 1, 1),
@@ -55,9 +56,9 @@ def sample_application():
                        other_fees=250)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def sample_preapproval():
-    return Preapproval(person=1,                    #This is not an accurate preapproval at all.
+    return Preapproval(person=1,  # This is not an accurate preapproval at all.
                        maintenance_fee=600,
                        insurance=40,
                        taxes=100,
@@ -72,10 +73,20 @@ def sample_preapproval():
                        reserves=30000,
                        dti=45)
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture()
 def sample_job():
     return Job(person=1,
                application=1,
                employer="Riot Games",
                position="Developer",
                monthly_income=5500)
+
+
+@pytest.fixture()
+def sample_asset():
+    return Asset(person=1,
+                 application=1,
+                 source="Bank of Hawaii",
+                 liquid=True,
+                 amount=50000)

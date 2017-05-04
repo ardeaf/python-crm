@@ -39,8 +39,6 @@ class Application(BaseModel):
     loan_purpose = CharField()
     loan_type = CharField()
     credit_score = CharField()
-    income = IntegerField()
-    assets = IntegerField()
     fthb = BooleanField()
     locked = BooleanField
     lock_date = DateField()
@@ -74,7 +72,15 @@ class Preapproval(BaseModel):
 
 class Job(BaseModel):
     person = ForeignKeyField(Person, related_name="jobs")
-    application = ForeignKeyField(Application, related_name="jobs")
+    application = ForeignKeyField(Application, related_name="application_jobs")
     employer = CharField()
     position = CharField()
     monthly_income = IntegerField()
+
+class Asset(BaseModel):
+    person = ForeignKeyField(Person, related_name="assets")
+    application = ForeignKeyField(Application, related_name="application_assets")
+    source = CharField()
+    liquid = BooleanField()
+    amount = IntegerField()
+
