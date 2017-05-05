@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental
 from datetime import date
 
 
@@ -10,7 +10,7 @@ def db():
     database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
-    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset], True)
+    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset, Rental], True)
 
 
 @pytest.fixture()
@@ -21,7 +21,8 @@ def sample_person():
                   email="ardeaf@lothbrok.com",
                   birthdate=date(1995, 10, 1),
                   address_current="700 Google Dr. #21B, San Mateo, CA, 98102",
-                  address_mailing="P.O. Box 3, San Mateo, CA, 98102")
+                  address_mailing="P.O. Box 3, San Mateo, CA, 98102",
+                  is_realtor=False)
 
 
 @pytest.fixture()
@@ -90,3 +91,19 @@ def sample_asset():
                  source="Bank of Hawaii",
                  liquid=True,
                  amount=50000)
+
+@pytest.fixture()
+def sample_rental():
+    return Rental(person=1,
+                  application=1,
+                  address="33 Investment St., New York, NY, 11253",
+                  monthly_revenue=2400,
+                  monthly_expenses=300,
+                  pitia=1900)
+
+@pytest.fixture()
+def sample_referral():
+    return Referral(referraler=1,
+                    referralee=2)
+
+

@@ -24,6 +24,7 @@ class Person(BaseModel):
     birthdate = DateField()
     address_current = CharField()
     address_mailing = CharField()
+    is_realtor = BooleanField()
 
 
 class Dependent(BaseModel):
@@ -70,12 +71,14 @@ class Preapproval(BaseModel):
     reserves = IntegerField()
     dti = DecimalField()
 
+
 class Job(BaseModel):
     person = ForeignKeyField(Person, related_name="jobs")
     application = ForeignKeyField(Application, related_name="application_jobs")
     employer = CharField()
     position = CharField()
     monthly_income = IntegerField()
+
 
 class Asset(BaseModel):
     person = ForeignKeyField(Person, related_name="assets")
@@ -84,3 +87,11 @@ class Asset(BaseModel):
     liquid = BooleanField()
     amount = IntegerField()
 
+
+class Rental(BaseModel):
+    person = ForeignKeyField(Person, related_name="rentals")
+    application = ForeignKeyField(Application, related_name="application_rentals")
+    address = CharField()
+    monthly_revenue = IntegerField()
+    monthly_expenses = IntegerField()
+    pitia = IntegerField()

@@ -1,5 +1,5 @@
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset
-from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job, sample_asset
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental
+from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job, sample_asset, sample_rental
 
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
@@ -67,3 +67,30 @@ def test_asset_creation_by_querying_name(sample_person, sample_application, samp
     sample_asset.save()
 
     assert sample_asset == Person.get(Person.id == 1).assets.get()
+
+def test_rental_creation_by_querying_name(sample_person, sample_application, sample_rental, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    db.create_table(Application, True)
+    sample_application.save()
+
+    db.create_table(Rental, True)
+    sample_rental.person = Person.get(Person.first_name == sample_person.first_name,
+                                      Person.last_name == sample_person.last_name)
+    sample_rental.save()
+
+    assert sample_rental == Person.get(Person.id == 1).rentals.get()
+
+def test_referral_creation_by_querying_name(sample_person, sample_application, sample_rental, db):
+    db.create_table(Person, True)
+    sample_person.save()
+
+    db.create_table(Referrals, True)
+    sample_referral.person = Person.get(Person.first_name == sample_person.first_name,
+                                        Person.last_name == sample_person.last_name)
+    sample_referral.save()
+
+    assert sample_referral == Person.get(Person.id == 1).referrals.get()
+
+

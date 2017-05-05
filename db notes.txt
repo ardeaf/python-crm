@@ -50,12 +50,6 @@ revenue
 expense
 pitia
 
-realtor id (contact id)
-name
-company
-phone number
-email
-
 referrals (contact id or realtor id)
 
 
