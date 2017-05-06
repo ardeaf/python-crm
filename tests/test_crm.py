@@ -1,5 +1,7 @@
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental
-from tests.fixtures import sample_person, db, sample_preapproval, sample_application, sample_dependent, sample_job, sample_asset, sample_rental, sample_person_two
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral
+from tests.fixtures import sample_person, db, sample_preapproval, sample_application
+from tests.fixtures import sample_dependent, sample_job, sample_asset, sample_rental, sample_person_two, sample_referral
+
 
 def test_query_matches_saved_person(sample_person, db):
     db.create_table(Person, True)
@@ -68,6 +70,7 @@ def test_asset_creation_by_querying_name(sample_person, sample_application, samp
 
     assert sample_asset == Person.get(Person.id == 1).assets.get()
 
+
 def test_rental_creation_by_querying_name(sample_person, sample_application, sample_rental, db):
     db.create_table(Person, True)
     sample_person.save()
@@ -82,17 +85,18 @@ def test_rental_creation_by_querying_name(sample_person, sample_application, sam
 
     assert sample_rental == Person.get(Person.id == 1).rentals.get()
 
-def test_referral_creation_by_querying_referrer(sample_person, sample_person_two, sample_application, sample_rental, db):
+
+def test_referral_creation_by_querying_referrer(sample_person, sample_person_two, sample_referral, db):
     db.create_table(Person, True)
     sample_person.save()
     sample_person_two.save()
 
-    db.create_table(Referrals, True)
+    db.create_table(Referral, True)
     sample_referral.referrer = Person.get(Person.first_name == sample_person.first_name,
                                           Person.last_name == sample_person.last_name)
     sample_referral.referral = Person.get(Person.first_name == sample_person_two.first_name,
                                           Person.last_name == sample_person_two.last_name)
 
+    sample_referral.save()
+
     assert sample_referral == Person.get(Person.id == 1).referrals.get()
-
-

@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral
 from datetime import date
 
 
@@ -10,7 +10,7 @@ def db():
     database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
-    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset, Rental], True)
+    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral], True)
 
 
 @pytest.fixture()
