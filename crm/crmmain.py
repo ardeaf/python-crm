@@ -105,4 +105,3 @@ class Referral(BaseModel):
 class Communication(BaseModel):
     person = ForeignKeyField(Person, related_name="communications")
     date = DateField()
-

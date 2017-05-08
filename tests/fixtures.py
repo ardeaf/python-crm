@@ -10,7 +10,8 @@ def db():
     database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")
     database = SqliteDatabase(database_path)
     yield database
-    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral], True)
+    database.drop_tables([Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication],
+                         True)
 
 
 @pytest.fixture()
@@ -24,16 +25,18 @@ def sample_person_one():
                   address_mailing="P.O. Box 3, San Mateo, CA, 98102",
                   is_realtor=False)
 
+
 @pytest.fixture()
 def sample_person_two():
     return Person(last_name="Lothbrok",
                   first_name="Athelstan",
                   cellphone="098765432",
                   email="Athelstan@Gmail.com",
-                  birthdate=date(1995,5,1),
+                  birthdate=date(1995, 5, 1),
                   address_current="800 Blimey Ln., Wessex, ENG, 90210",
                   address_mailing="Same",
                   is_realtor=True)
+
 
 @pytest.fixture()
 def sample_dependent():
@@ -102,6 +105,7 @@ def sample_asset():
                  liquid=True,
                  amount=50000)
 
+
 @pytest.fixture()
 def sample_rental():
     return Rental(person=1,
@@ -111,10 +115,12 @@ def sample_rental():
                   monthly_expenses=300,
                   pitia=1900)
 
+
 @pytest.fixture()
 def sample_referral():
     return Referral(referraler=1,
                     referralee=2)
+
 
 @pytest.fixture()
 def sample_communication():

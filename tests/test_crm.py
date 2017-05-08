@@ -1,6 +1,6 @@
 from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
-from tests.fixtures import sample_person_one, db, sample_preapproval, sample_application
-from tests.fixtures import sample_dependent, sample_job, sample_asset, sample_rental, sample_person_two, sample_referral, sample_communication
+from tests.fixtures import sample_person_one, db, sample_preapproval, sample_application, sample_dependent, sample_job
+from tests.fixtures import sample_asset, sample_rental, sample_person_two, sample_referral, sample_communication
 
 
 def test_query_matches_saved_person(sample_person_one, db):
