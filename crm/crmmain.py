@@ -96,6 +96,13 @@ class Rental(BaseModel):
     monthly_expenses = IntegerField()
     pitia = IntegerField()
 
+
 class Referral(BaseModel):
     referrer = ForeignKeyField(Person, related_name="referrals")
     referral = ForeignKeyField(Person, related_name="referrer")
+
+
+class Communication(BaseModel):
+    person = ForeignKeyField(Person, related_name="communications")
+    date = DateField()
+

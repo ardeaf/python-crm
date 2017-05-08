@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral
+from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from datetime import date
 
 
@@ -14,7 +14,7 @@ def db():
 
 
 @pytest.fixture()
-def sample_person():
+def sample_person_one():
     return Person(last_name="Lothbrok",
                   first_name="Ardeaf",
                   cellphone="1234567890",
@@ -116,4 +116,7 @@ def sample_referral():
     return Referral(referraler=1,
                     referralee=2)
 
-
+@pytest.fixture()
+def sample_communication():
+    return Communication(date=date(2017, 1, 1),
+                         person=1)
