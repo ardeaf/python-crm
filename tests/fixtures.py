@@ -125,4 +125,5 @@ def sample_referral():
 @pytest.fixture()
 def sample_communication():
     return Communication(date=date(2017, 1, 1),
-                         person=1)
+                         person=1,
+                         note="Touched bases, still doesn't know that his father is the great Ragnar Lothbrok.")

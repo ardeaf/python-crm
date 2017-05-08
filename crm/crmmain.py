@@ -1,5 +1,5 @@
 from peewee import Model, CharField, DateField, BooleanField, IntegerField, SqliteDatabase, ForeignKeyField, \
-    DecimalField
+    DecimalField, TextField
 import os
 
 if __name__ == "__main__":
@@ -105,3 +105,4 @@ class Referral(BaseModel):
 class Communication(BaseModel):
     person = ForeignKeyField(Person, related_name="communications")
     date = DateField()
+    note = TextField()
