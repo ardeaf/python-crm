@@ -1,7 +1,7 @@
 import os
 from peewee import SqliteDatabase
 import pytest
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
+from crm.models import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from datetime import date
 
 
@@ -72,7 +72,7 @@ def sample_application():
 
 @pytest.fixture()
 def sample_preapproval():
-    return Preapproval(person=1,  # This is not an accurate preapproval at all.
+    return Preapproval(person=0,  # This is not an accurate preapproval at all.
                        maintenance_fee=600,
                        insurance=40,
                        taxes=100,
@@ -110,7 +110,7 @@ def sample_asset():
 def sample_rental():
     return Rental(person=1,
                   application=1,
-                  address="33 Investment St., New York, NY, 11253",
+                  address="33 investment st., new york, ny, 11253",
                   monthly_revenue=2400,
                   monthly_expenses=300,
                   pitia=1900)

@@ -1,4 +1,4 @@
-from crm.crmmain import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
+from crm.models import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from tests.fixtures import sample_person_one, db, sample_preapproval, sample_application, sample_dependent, sample_job
 from tests.fixtures import sample_asset, sample_rental, sample_person_two, sample_referral, sample_communication
 
