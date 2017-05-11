@@ -1,15 +1,11 @@
 from peewee import Model, CharField, DateField, BooleanField, IntegerField, SqliteDatabase, ForeignKeyField, \
     DecimalField, TextField
-import os
+# Setting None as an argument to SqliteDatabase allows us to set it at runtime depending on what we're doing.
+db = SqliteDatabase(None)
 
 
 class BaseModel(Model):
     class Meta:
-        db_name = "test_crm.db"
-
-        db_path = os.path.join(os.path.expanduser("~"), db_name)
-        db = SqliteDatabase(db_path)
-
         database = db
 
 
