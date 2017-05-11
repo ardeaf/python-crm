@@ -5,7 +5,8 @@ python:
   - "3.6"
 # command to install dependencies
 
-install: 
+install:
+  - touch ~/crm.db
   - pip install -r requirements/dev.txt
 
 # command to run tests
