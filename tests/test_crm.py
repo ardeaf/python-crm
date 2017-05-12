@@ -1,6 +1,9 @@
 from crm.models import Person
 from tests.fixtures import sample_person_one, sample_preapproval, sample_application, sample_dependent, sample_job, \
     sample_asset, sample_rental, sample_person_two, sample_referral, sample_communication, db_fixture
+from hypothesis import given, settings
+from hypothesis.strategies import characters, integers, decimals, text
+from hypothesis.extra.datetime import dates
 
 
 def test_query_matches_saved_person(sample_person_one):
@@ -81,3 +84,21 @@ def test_communication_by_querying_person(sample_person_one, sample_communicatio
     sample_communication.save()
 
     assert sample_communication == Person.get(Person.last_name == sample_person_one.last_name).communications.get()
+
+
+@given(text(), text(), text(), text(), dates(), text(), text())
+@settings()
+def test_random_person(db_fixture, hlast_name, hfirst_name, hcellphone, hemail, hbirthdate, haddress_current, haddress_mailing):
+    with db_fixture.atomic() as txn:
+        db_fixture.create_table(Person, True)
+        Person.create(last_name=hlast_name,
+                        first_name=hfirst_name,
+                        cellphone=hcellphone,
+                        email=hemail,
+                        birthdate=hbirthdate,
+                        address_current=haddress_current,
+                        address_mailing=haddress_mailing,
+                        is_realtor=False)
+        assert hfirst_name == Person.get(Person.last_name == hlast_name).first_name
+
+        txn.rollback()
