@@ -2,3 +2,6 @@
 pytest==3.0.7
 tox==2.7.0
 tox-travis==0.8
+hypothesis
+hypothesis-datetime
+hypothesis-pytest
