@@ -7,7 +7,7 @@ from shutil import copy2
 
 # Fixture to initialize the database since that must be done at runtime to specify which db we are using for our
 # BaseModels. For testing, makes a copy of the normal database and tests on that. Then deletes it.
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def db_fixture():
     database_path = os.path.join(os.path.expanduser("~"), "crm.db")
     test_database_path = os.path.join(os.path.expanduser("~"), "test_crm.db")

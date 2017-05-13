@@ -87,7 +87,6 @@ def test_communication_by_querying_person(sample_person_one, sample_communicatio
 
 
 @given(text(), text(), text(), text(), dates(), text(), text())
-@settings()
 def test_random_person(db_fixture, hlast_name, hfirst_name, hcellphone, hemail, hbirthdate, haddress_current, haddress_mailing):
     with db_fixture.atomic() as txn:
         db_fixture.create_table(Person, True)
