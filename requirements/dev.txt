@@ -2,9 +2,7 @@
 pytest==3.0.7
 tox==2.7.0
 tox-travis==0.8
-hypothesis-pytestappdirs==1.4.3
 hypothesis==3.8.3
-peewee==2.10.1
 pluggy==0.4.0
 py==1.4.33
 pyparsing==2.2.0
