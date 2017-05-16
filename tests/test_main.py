@@ -8,7 +8,6 @@ from playhouse.shortcuts import model_to_dict
 from hypothesis import given, settings, event, assume, note
 from hypothesis.strategies import text, booleans, integers, builds, decimals, none
 from hypothesis.extra.datetime import dates
-import pytest
 
 # Helper function. Returns dict of field names and the corresponding field type, given an object.
 def fields_to_dict(obj):
@@ -48,7 +47,7 @@ def test_insert(db_fixture, person, dependent, application, preapproval, job, as
 
         for object in objects:
             object.create_table(True)
-            note(f"Initial {object.__class__.__name__} = {model_to_dict(object)}")
+            note("Initial {} = {}".format(object.__class__.__name__, model_to_dict(object)))
 
         for object in objects:
             before_count.append(object.select().count())
@@ -61,14 +60,14 @@ def test_insert(db_fixture, person, dependent, application, preapproval, job, as
             for key, value in model_to_dict(object).items():
                 if key in ['person', 'parent', 'referrer', 'referral']:
                     object.key = random_person
-                    setattr(object, f"{key}_id", random_person.id)
+                    setattr(object, "{}_id".format(key), random_person.id)
 
             try:  # Need to do this try in case the application table is empty.
                 random_application = Application.select().order_by(fn.Random()).limit(1).get()
                 for key, value in model_to_dict(object).items():
                     if key in ['application']:
                         object.key = random_application
-                        setattr(object, f"{key}_id", random_application.id)
+                        setattr(object, "{}_id".format(key), random_application.id)
             except Application.DoesNotExist:
                 pass
 
