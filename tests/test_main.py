@@ -4,10 +4,11 @@ from tests.fixtures import db_fixture, sample_application
 from crm.models import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from crm import main
 from peewee import fn, CharField, DateField, BooleanField, IntegerField, DecimalField, TextField, ForeignKeyField
-from hypothesis import given, settings, event, assume
+from playhouse.shortcuts import model_to_dict
+from hypothesis import given, settings, event, assume, note
 from hypothesis.strategies import text, booleans, integers, builds, decimals, none
 from hypothesis.extra.datetime import dates
-
+import pytest
 
 # Helper function. Returns dict of field names and the corresponding field type, given an object.
 def fields_to_dict(obj):
@@ -27,29 +28,52 @@ def hypothesis_strategy(field_type):
     if isinstance(field_type, BooleanField):
         return booleans()
     if isinstance(field_type, IntegerField):
-        return integers()
+        return integers(min_value=-(2 ** 63 - 1), max_value=2 ** 63 - 1)
     if isinstance(field_type, DecimalField):
-        return decimals()
+        return decimals(min_value=-(2 ** 63 - 1), max_value=2 ** 63 - 1)
 
 @given(builds(Person, **fields_to_dict(Person)),
        builds(Dependent, **fields_to_dict(Dependent)),
-       builds(Application, **fields_to_dict(Application)))
-def test_insert(db_fixture, person, dependent, application):
+       builds(Application, **fields_to_dict(Application)),
+       builds(Preapproval, **fields_to_dict(Preapproval)),
+       builds(Job, **fields_to_dict(Job)),
+       builds(Asset, **fields_to_dict(Asset)),
+       builds(Rental, **fields_to_dict(Rental)),
+       builds(Referral, **fields_to_dict(Referral)),
+       builds(Communication, **fields_to_dict(Communication)))
+def test_insert(db_fixture, person, dependent, application, preapproval, job, asset, rental, referral, communication):
     with db_fixture.atomic() as txn:
-        person.create_table(True)
-        dependent.create_table(True)
-        application.create_table(True)
+        objects = [person, dependent, application, preapproval, job, asset, rental, referral, communication]
+        before_count = list()
 
-        before_count = (person.select().count(), dependent.select().count(), application.select().count())
+        for object in objects:
+            object.create_table(True)
+            note(f"Initial {object.__class__.__name__} = {model_to_dict(object)}")
 
-        main.insert(db_fixture, person)
+        for object in objects:
+            before_count.append(object.select().count())
 
-        random_person = person.select().order_by(fn.Random()).limit(1).get()
-        dependent.parent = random_person
-        application.person = random_person
+            if isinstance(object, Person):
+                main.insert(db_fixture, object)
 
-        main.insert(db_fixture, dependent)
-        main.insert(db_fixture, application)
+            random_person = Person.select().order_by(fn.Random()).limit(1).get()
+
+            for key, value in model_to_dict(object).items():
+                if key in ['person', 'parent', 'referrer', 'referral']:
+                    object.key = random_person
+                    setattr(object, f"{key}_id", random_person.id)
+
+            try:  # Need to do this try in case the application table is empty.
+                random_application = Application.select().order_by(fn.Random()).limit(1).get()
+                for key, value in model_to_dict(object).items():
+                    if key in ['application']:
+                        object.key = random_application
+                        setattr(object, f"{key}_id", random_application.id)
+            except Application.DoesNotExist:
+                pass
+
+            if not isinstance(object, Person):
+                main.insert(db_fixture, object)
 
         after_count = (person.select().count(), dependent.select().count(), application.select().count())
 

@@ -9,10 +9,10 @@ import cmd
 def insert(db, object):
     # Inserts a specified model into the db.
     with db.atomic() as txn:
-        for field, field_name in zip(object._meta.sorted_fields, object._meta.sorted_field_names):
+        """for field, field_name in zip(object._meta.sorted_fields, object._meta.sorted_field_names):
             if isinstance(field, peewee.IntegerField) and not isinstance(field, peewee.PrimaryKeyField) and not isinstance(field, peewee.ForeignKeyField):
-                if getattr(object, field_name) > 2**62:
-                    setattr(object, field_name, str(field))
+                if getattr(object, field_name) > 2**62 or getattr(object, field_name) < -(2 ** 62):
+                    raise OverflowError"""
         object.save()
 
 
