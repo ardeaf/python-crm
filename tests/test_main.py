@@ -9,14 +9,18 @@ from hypothesis import given, settings, event, assume, note
 from hypothesis.strategies import text, booleans, integers, builds, decimals, none
 from hypothesis.extra.datetime import dates
 
-# Helper function. Returns dict of field names and the corresponding field type, given an object.
+
+# Helper functions.
+
+# Returns dict of field names and the corresponding field type, given an object.
 def fields_to_dict(obj):
     diction =  {field_name: hypothesis_strategy(field) for field_name, field in zip(obj._meta.sorted_field_names, obj._meta.sorted_fields)
             if field_name != 'id'}
 
     return diction
 
-# Helper function.  Reads the given field type and returns the associated hypothesis strategy we are going to use.
+
+# Reads the given field type and returns the associated hypothesis strategy we are going to use.
 def hypothesis_strategy(field_type):
     if isinstance(field_type, ForeignKeyField):
         return none()
@@ -31,6 +35,7 @@ def hypothesis_strategy(field_type):
     if isinstance(field_type, DecimalField):
         return decimals(min_value=-(2 ** 63 - 1), max_value=2 ** 63 - 1)
 
+
 @given(builds(Person, **fields_to_dict(Person)),
        builds(Dependent, **fields_to_dict(Dependent)),
        builds(Application, **fields_to_dict(Application)),
@@ -40,7 +45,7 @@ def hypothesis_strategy(field_type):
        builds(Rental, **fields_to_dict(Rental)),
        builds(Referral, **fields_to_dict(Referral)),
        builds(Communication, **fields_to_dict(Communication)))
-def test_insert(db_fixture, person, dependent, application, preapproval, job, asset, rental, referral, communication):
+def test_insert_and_remove(db_fixture, person, dependent, application, preapproval, job, asset, rental, referral, communication):
     with db_fixture.atomic() as txn:
         objects = [person, dependent, application, preapproval, job, asset, rental, referral, communication]
         before_count = list()
@@ -48,10 +53,9 @@ def test_insert(db_fixture, person, dependent, application, preapproval, job, as
         for object in objects:
             object.create_table(True)
             note("Initial {} = {}".format(object.__class__.__name__, model_to_dict(object)))
-
-        for object in objects:
             before_count.append(object.select().count())
 
+        for object in objects:
             if isinstance(object, Person):
                 main.insert(db_fixture, object)
 
@@ -74,7 +78,18 @@ def test_insert(db_fixture, person, dependent, application, preapproval, job, as
             if not isinstance(object, Person):
                 main.insert(db_fixture, object)
 
-        after_count = (person.select().count(), dependent.select().count(), application.select().count())
+        after_count = [object.select().count() for object in objects]
 
         for counts in zip(before_count, after_count):
             assert counts[0] == counts[1] - 1
+
+        # Done inserting, now test removing.
+        before_remove_count = list()
+        for object in objects:
+            before_remove_count.append(object.select().count())
+            main.remove(db_fixture, object)
+
+        after_remove_count = [object.select().count() for object in objects]
+
+        for counts in zip(before_remove_count, after_remove_count):
+            assert counts[0] - 1 == counts[1]

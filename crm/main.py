@@ -6,15 +6,16 @@ from datetime import date
 import cmd
 
 
+# Inserts a object into the db.
 def insert(db, object):
-    # Inserts a specified model into the db.
     with db.atomic() as txn:
         object.save()
 
 
-def remove():
-    # Deletes a specified model into the db.
-    pass
+# Removes object from db.
+def remove(db, object):
+    with db.atomic() as txn:
+        return object.delete_instance()
 
 
 def main():
