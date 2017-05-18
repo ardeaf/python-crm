@@ -1,3 +1,3 @@
 intro = "CRM app started up.\n"
-prompt = "(CRM)"
+prompt = "(CRM) > "
 outtro = "Exiting prompt."

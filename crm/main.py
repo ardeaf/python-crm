@@ -10,8 +10,13 @@ from datetime import date
 class CmdShell(cmd.Cmd):
     intro = const.intro
     prompt = const.prompt
+    db = db
 
-    def do_exit(self, line):
+    def do_print_db_path(self, arg):
+        "Prints path to connected database."
+        print(db.database)
+
+    def do_exit(self, arg):
         "Exits prompt."
         print(const.outtro)
         return True
@@ -34,6 +39,7 @@ def main():
     db_path = os.path.join(os.path.expanduser("~"), db_name)
     db.init(db_path)
 
+    CmdShell().cmdloop()
 
 
 if __name__ == "__main__":

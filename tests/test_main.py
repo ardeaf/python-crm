@@ -17,8 +17,9 @@ from hypothesis.extra.datetime import dates
 
 # Returns dict of field names and the corresponding field type, given an object.
 def fields_to_dict(obj):
-    diction =  {field_name: hypothesis_strategy(field) for field_name, field in zip(obj._meta.sorted_field_names, obj._meta.sorted_fields)
-            if field_name != 'id'}
+    diction = {field_name: hypothesis_strategy(field) for field_name, field in
+               zip(obj._meta.sorted_field_names, obj._meta.sorted_fields)
+               if field_name != 'id'}
 
     return diction
 
@@ -48,7 +49,8 @@ def hypothesis_strategy(field_type):
        builds(Rental, **fields_to_dict(Rental)),
        builds(Referral, **fields_to_dict(Referral)),
        builds(Communication, **fields_to_dict(Communication)))
-def test_insert_and_remove(db_fixture, person, dependent, application, preapproval, job, asset, rental, referral, communication):
+def test_insert_and_remove(db_fixture, person, dependent, application, preapproval, job, asset, rental, referral,
+                           communication):
     with db_fixture.atomic() as txn:
         objects = [person, dependent, application, preapproval, job, asset, rental, referral, communication]
         before_count = list()
@@ -102,6 +104,8 @@ def test_insert_and_remove(db_fixture, person, dependent, application, preapprov
 
 def test_cmd_started_and_exited(capsys):
     cli = main.CmdShell()
+
+    # cmdqueue gets executed in the beginning of cmdloop
     cli.cmdqueue = ["exit"]
     cli.cmdloop()
     out, err = capsys.readouterr()
@@ -113,3 +117,12 @@ def test_cmd_started_and_exited(capsys):
     assert out[-1] == expected_exit
 
 
+def test_db_path(db_fixture, capsys):
+    # Make sure using ~/test_crm.db for tests.
+    cli = main.CmdShell()
+    cli.do_print_db_path(None)
+
+    out, err = capsys.readouterr()
+
+    assert out.strip('\n') == db_fixture.database
+    assert out.strip('\n') == os.path.join(os.path.expanduser("~"), 'test_crm.db')
