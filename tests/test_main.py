@@ -3,6 +3,9 @@ import os
 from tests.fixtures import db_fixture, sample_application
 from crm.models import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from crm import main
+import pytest
+from unittest import mock
+import crm.const as const
 from peewee import fn, CharField, DateField, BooleanField, IntegerField, DecimalField, TextField, ForeignKeyField
 from playhouse.shortcuts import model_to_dict
 from hypothesis import given, settings, event, assume, note
@@ -61,11 +64,13 @@ def test_insert_and_remove(db_fixture, person, dependent, application, preapprov
 
             random_person = Person.select().order_by(fn.Random()).limit(1).get()
 
+            # If there is a reference to a Person foreign key update that reference and id.
             for key, value in model_to_dict(object).items():
                 if key in ['person', 'parent', 'referrer', 'referral']:
                     object.key = random_person
                     setattr(object, "{}_id".format(key), random_person.id)
 
+            # Same thing for application
             try:  # Need to do this try in case the application table is empty.
                 random_application = Application.select().order_by(fn.Random()).limit(1).get()
                 for key, value in model_to_dict(object).items():
@@ -83,7 +88,7 @@ def test_insert_and_remove(db_fixture, person, dependent, application, preapprov
         for counts in zip(before_count, after_count):
             assert counts[0] == counts[1] - 1
 
-        # Done inserting, now test removing.
+        # Done testing insert(), now test remove().
         before_remove_count = list()
         for object in objects:
             before_remove_count.append(object.select().count())
@@ -93,3 +98,18 @@ def test_insert_and_remove(db_fixture, person, dependent, application, preapprov
 
         for counts in zip(before_remove_count, after_remove_count):
             assert counts[0] - 1 == counts[1]
+
+
+def test_cmd_started_and_exited(capsys):
+    cli = main.CmdShell()
+    cli.cmdqueue = ["exit"]
+    cli.cmdloop()
+    out, err = capsys.readouterr()
+
+    out = out.strip('\n').split('\n')
+    expected_intro = const.intro.strip('\n')
+    expected_exit = const.outtro
+    assert out[0] == expected_intro
+    assert out[-1] == expected_exit
+
+

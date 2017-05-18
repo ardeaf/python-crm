@@ -1,10 +1,20 @@
-import os
+import os, cmd
+import crm.const as const
 from crm.models import Person, Dependent, Application, Preapproval, Job, Asset, Rental, Referral, Communication
 from crm.models import db
 import peewee
 from datetime import date
-import cmd
 
+
+
+class CmdShell(cmd.Cmd):
+    intro = const.intro
+    prompt = const.prompt
+
+    def do_exit(self, line):
+        "Exits prompt."
+        print(const.outtro)
+        return True
 
 # Inserts a object into the db.
 def insert(db, object):
@@ -23,6 +33,7 @@ def main():
     db_name = "crm.db"
     db_path = os.path.join(os.path.expanduser("~"), db_name)
     db.init(db_path)
+
 
 
 if __name__ == "__main__":
